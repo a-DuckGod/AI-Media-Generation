@@ -7,7 +7,7 @@ import requests
 # --- FLASK APP ---
 app = Flask(__name__)
 # This allows your live frontend to talk to your live backend
-CORS(app, origins=["http://127.0.0.1:5500", "null", "https://ai-media-generator-w67t.onrender.com"])
+CORS(app, origins=["http://127.0.0.1:5500", "null", "https://ai-media-generation.onrender.com"])
 
 @app.route('/generate', methods=['POST'])
 def generate_content():
