@@ -95,13 +95,24 @@
         const openaiKeyInput = document.getElementById('openai_key');
         const googleKeyInput = document.getElementById('google_key');
 
+        // --- "SMART" URL SELECTION ---
+        // This function checks if you are on your local machine or the live server.
+        function getBackendUrl() {
+            if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+                // Use local server URL
+                return 'http://127.0.0.1:5000/generate';
+            } else {
+                // Use live server URL
+                return 'https://ai-media-generator-fv1a.onrender.com/generate';
+            }
+        }
+
         async function generateContent() {
             const prompt = promptInput.value.trim();
             const selectedModel = apiSelector.value;
             const openaiKey = openaiKeyInput.value.trim();
             const googleKey = googleKeyInput.value.trim();
 
-            // --- VALIDATION ---
             if (!prompt) {
                 displayMessage('error', 'Please enter a prompt.');
                 return;
@@ -115,11 +126,10 @@
                 return;
             }
 
-            // --- START GENERATION ---
             generateBtn.disabled = true;
             displayMessage('loading', 'Generating media...');
             
-            const url = `https://ai-media-generator-fv1a.onrender.com`;
+            const url = getBackendUrl(); // Use the smart function to get the correct URL
 
             try {
                 const response = await fetch(url, {

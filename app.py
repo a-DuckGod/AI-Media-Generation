@@ -7,7 +7,7 @@ import requests
 # --- FLASK APP ---
 app = Flask(__name__)
 # This allows your live frontend to talk to your live backend
-CORS(app, origins=["http://127.0.0.1:5500", "null", "https://ai-media-generation.onrender.com"])
+CORS(app, origins=["http://127.0.0.1:5500", "null", "https://ai-media-generation.onrender.com", "https://ai-media-generator-w67t.onrender.com", "https://ai-media-generator-fv1a.onrender.com"])
 
 @app.route('/generate', methods=['POST'])
 def generate_content():
@@ -30,13 +30,10 @@ def generate_content():
             if not user_openai_key:
                 return jsonify({'error': 'OpenAI API Key is required for this model.'}), 400
             
-            # Initialize the OpenAI client with the user's key for this specific request
             client = OpenAI(api_key=user_openai_key)
             
-            # Set default parameters for DALL-E 3
             params = {'model': 'dall-e-3', 'prompt': prompt, 'n': 1, 'size': '1024x1024'}
             
-            # Adjust parameters based on the specific model version selected
             if model_id == "dalle-3-hd":
                 params['quality'] = 'hd'
             elif model_id == "dalle-3-std":
@@ -55,7 +52,6 @@ def generate_content():
             if not user_google_key:
                 return jsonify({'error': 'Google API Key is required for this model.'}), 400
 
-            # Map the friendly names from the UI to the official model names
             model_name_map = {
                 "imagen-4-ultra": "imagen-4.0-ultra-generate-preview-06-06",
                 "imagen-4-std": "imagen-4.0-generate-preview-06-06",
@@ -83,7 +79,6 @@ def generate_content():
         else:
             return jsonify({'error': 'Invalid model ID provided.'}), 400
 
-        # Return the URLs in a consistent format for the frontend
         return jsonify({'media_urls': media_urls})
 
     except Exception as e:
@@ -92,6 +87,6 @@ def generate_content():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    # Use the PORT environment variable provided by Render for deployment.
-    port = int(os.environ.get('PORT', 8080))
+    # Use port 5000 for local development for consistency
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
