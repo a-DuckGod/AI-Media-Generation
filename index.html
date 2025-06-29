@@ -13,14 +13,11 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 1rem center;
-            background-size: 1.5em 1.5em;
-            padding-right: 3rem; 
+            background-size: 1.5em 1.5em; padding-right: 3rem; 
         }
     </style>
 </head>
@@ -32,17 +29,35 @@
                 AI Media Generator
             </h1>
             <p class="mt-4 text-lg text-gray-400">
-                Bring your ideas to life. Describe any scene, choose your engine, and create.
+                Bring your ideas to life. Enter your API keys, describe a scene, and create.
             </p>
         </div>
 
+        <!-- Control Panel Section -->
         <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-lg space-y-6">
+            
+            <!-- API Keys Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="openai_key" class="block text-sm font-medium text-gray-300 mb-2">OpenAI API Key</label>
+                    <input type="password" id="openai_key" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 text-white" placeholder="Paste your OpenAI key">
+                </div>
+                <div>
+                    <label for="google_key" class="block text-sm font-medium text-gray-300 mb-2">Google AI API Key</label>
+                    <input type="password" id="google_key" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 text-white" placeholder="Paste your Google key">
+                </div>
+            </div>
+
+            <!-- Separator -->
+            <hr class="border-gray-700">
+
+            <!-- Generation Section -->
             <div>
                 <label for="apiSelector" class="block text-lg font-semibold text-gray-200 mb-2">Choose AI Model & Quality:</label>
-                <select id="apiSelector" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200 text-white">
+                <select id="apiSelector" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 transition duration-200 text-white">
                     <optgroup label="OpenAI Models">
                         <option value="dalle-3-hd">DALL·E 3 (HD) — $0.08 / image</option>
-                        <option value="dalle-3-std">DALL·E 3 (Standard) — $0.04 / image</option>
+                        <option value="dalle-3-std" selected>DALL·E 3 (Standard) — $0.04 / image</option>
                         <option value="dalle-2-1024">DALL·E 2 (1024px) — $0.02 / image</option>
                         <option value="dalle-2-512">DALL·E 2 (512px) — $0.018 / image</option>
                         <option value="sora" disabled>Sora (Video) — N/A (Not Public)</option>
@@ -58,7 +73,7 @@
             
             <div>
                  <label for="prompt" class="block text-lg font-semibold text-gray-200 mb-2">Your Prompt:</label>
-                <textarea id="prompt" rows="4" class="w-full p-4 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200 text-white placeholder-gray-400 resize-none" placeholder="A photorealistic close-up of a chameleon..."></textarea>
+                <textarea id="prompt" rows="4" class="w-full p-4 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 transition duration-200 text-white placeholder-gray-400 resize-none" placeholder="A photorealistic close-up of a chameleon..."></textarea>
             </div>
            
             <button id="generateBtn" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 ease-in-out flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
@@ -77,26 +92,45 @@
         const promptInput = document.getElementById('prompt');
         const resultDiv = document.getElementById('result');
         const apiSelector = document.getElementById('apiSelector');
+        const openaiKeyInput = document.getElementById('openai_key');
+        const googleKeyInput = document.getElementById('google_key');
 
         async function generateContent() {
             const prompt = promptInput.value.trim();
+            const selectedModel = apiSelector.value;
+            const openaiKey = openaiKeyInput.value.trim();
+            const googleKey = googleKeyInput.value.trim();
+
+            // --- VALIDATION ---
             if (!prompt) {
                 displayMessage('error', 'Please enter a prompt.');
                 return;
             }
+            if (selectedModel.startsWith('dalle') && !openaiKey) {
+                displayMessage('error', 'Please enter your OpenAI API Key.');
+                return;
+            }
+            if (selectedModel.startsWith('imagen') && !googleKey) {
+                displayMessage('error', 'Please enter your Google AI API Key.');
+                return;
+            }
 
+            // --- START GENERATION ---
             generateBtn.disabled = true;
             displayMessage('loading', 'Generating media...');
-
-            const selectedModel = apiSelector.value;
-            const url = `https://ai-media-generator-yrca.onrender.com/generate`;
+            
+            const url = `https://ai-media-generator-yrca.onrender.com/generate`; // Using your live backend URL
 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    // Send the selected model identifier to the backend
-                    body: JSON.stringify({ prompt: prompt, model: selectedModel })
+                    body: JSON.stringify({ 
+                        prompt: prompt, 
+                        model: selectedModel,
+                        openai_key: openaiKey,
+                        google_key: googleKey
+                    })
                 });
 
                 const data = await response.json();
@@ -114,19 +148,13 @@
                 resultDiv.innerHTML = '';
                 mediaUrls.forEach(src => {
                     let mediaElement;
-                    // Check if the model is a video model (currently placeholders)
                     if (selectedModel.includes('sora') || selectedModel.includes('veo')) {
                         mediaElement = document.createElement('video');
-                        mediaElement.src = src;
-                        mediaElement.controls = true;
-                        mediaElement.autoplay = true;
-                        mediaElement.loop = true;
-                        mediaElement.muted = true;
+                        mediaElement.src = src; mediaElement.controls = true; mediaElement.autoplay = true; mediaElement.loop = true; mediaElement.muted = true;
                         mediaElement.className = 'rounded-lg max-w-full h-auto shadow-inner';
                     } else {
                         mediaElement = document.createElement('img');
-                        mediaElement.src = src;
-                        mediaElement.alt = prompt;
+                        mediaElement.src = src; mediaElement.alt = prompt;
                         mediaElement.className = 'rounded-lg max-w-full h-auto shadow-inner';
                     }
                     resultDiv.appendChild(mediaElement);
