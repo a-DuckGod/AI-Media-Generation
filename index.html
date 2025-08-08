@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Media Generator</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    
     <style>
         body { font-family: 'Inter', sans-serif; }
         select {
@@ -25,6 +26,9 @@
 
     <div class="w-full max-w-2xl mx-auto space-y-8">
         <div class="text-center">
+            
+            <img src="logo.png" alt="AI Media Generator Logo" class="mx-auto h-24 w-auto mb-4">
+            
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
                 AI Media Generator
             </h1>
@@ -33,10 +37,8 @@
             </p>
         </div>
 
-        <!-- Control Panel Section -->
         <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-lg space-y-6">
             
-            <!-- API Keys Section -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="openai_key" class="block text-sm font-medium text-gray-300 mb-2">OpenAI API Key</label>
@@ -48,10 +50,8 @@
                 </div>
             </div>
 
-            <!-- Separator -->
             <hr class="border-gray-700">
 
-            <!-- Generation Section -->
             <div>
                 <label for="apiSelector" class="block text-lg font-semibold text-gray-200 mb-2">Choose AI Model & Quality:</label>
                 <select id="apiSelector" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 transition duration-200 text-white">
@@ -95,15 +95,12 @@
         const openaiKeyInput = document.getElementById('openai_key');
         const googleKeyInput = document.getElementById('google_key');
 
-        // --- "SMART" URL SELECTION ---
-        // This function checks if you are on your local machine or the live server.
         function getBackendUrl() {
             if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
-                // Use local server URL
                 return 'http://127.0.0.1:5000/generate';
             } else {
-                // Use live server URL
-                return 'https://ai-media-generator-fv1a.onrender.com/generate';
+                // IMPORTANT: Make sure this URL is correct for your DEPLOYED backend
+                return 'https://ai-media-generator-yrca.onrender.com/generate';
             }
         }
 
@@ -129,7 +126,7 @@
             generateBtn.disabled = true;
             displayMessage('loading', 'Generating media...');
             
-            const url = getBackendUrl(); // Use the smart function to get the correct URL
+            const url = getBackendUrl();
 
             try {
                 const response = await fetch(url, {
