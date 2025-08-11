@@ -58,8 +58,12 @@ def generate_content():
                 "imagen-3": "imagen-3.0-generate-002"
             }
             model_name = model_name_map.get(model_id)
+            if not model_name:
+                return jsonify({'error': 'Invalid model ID provided.'}), 400
 
-            api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:predict?key={user_google_key}"
+            api_url = (
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:predict?key={user_google_key}"
+            )
             payload = {"instances": [{"prompt": prompt}], "parameters": {"sampleCount": 1}}
             
             api_response = requests.post(api_url, json=payload)
@@ -74,7 +78,9 @@ def generate_content():
 
         # --- Placeholder Video Logic ---
         elif model_id in ["sora", "veo"]:
-             media_urls.append("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+            media_urls.append(
+                "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            )
             
         else:
             return jsonify({'error': 'Invalid model ID provided.'}), 400
