@@ -1,0 +1,297 @@
+/* ---------- Design tokens ---------- */
+:root{
+  --bg: #0b0f14;
+  --fg: #e7ecf2;
+  --muted: #b6c0cc;
+
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-bd: rgba(255,255,255,0.25);
+  --glass-shadow: 0 10px 40px rgba(0,0,0,.35);
+
+  --brand: #4dd6ff;
+  --brand-2: #7e6bff;
+  --ok: #15b77e;
+  --warn: #ffb84a;
+  --err: #ff5d6c;
+
+  --radius-xl: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    --bg: #f3f5f8;
+    --fg: #0c1116;
+    --muted: #3a4a5a;
+
+    --glass-bg: rgba(255,255,255,0.55);
+    --glass-bd: rgba(0,0,0,0.08);
+    --glass-shadow: 0 10px 40px rgba(0,0,0,.12);
+  }
+}
+
+/* ---------- Base ---------- */
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  color:var(--fg);
+  font-family:var(--font);
+  background: var(--bg);
+}
+
+a{ color: var(--fg); opacity:.8; text-decoration: none; }
+a:hover{ opacity:1; }
+
+/* ---------- Animated background ---------- */
+.options-body .bg{
+  position: fixed; inset: 0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.options-body .grain{
+  position:absolute; inset:-20%;
+  background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='table' tableValues='0 0 .08 .12 .08 0'/></feComponentTransfer></filter>\
+<rect width='100%' height='100%' filter='url(%23n)'/>\
+</svg>");
+  opacity:.25;
+  mix-blend-mode: soft-light;
+  animation: grainMove 14s linear infinite;
+}
+
+@keyframes grainMove {
+  0% { transform: translate3d(0,0,0) }
+  100% { transform: translate3d(-10%, -10%, 0) }
+}
+
+/* liquid blobs */
+.blob{
+  position:absolute;
+  width:42vmax; height:42vmax;
+  background: radial-gradient(60% 60% at 40% 40%, #42ffd7 0%, transparent 60%),
+              radial-gradient(45% 45% at 70% 60%, #6e78ff 0%, transparent 70%),
+              radial-gradient(55% 55% at 50% 70%, #00b3ff 0%, transparent 65%);
+  filter: blur(40px) saturate(130%);
+  opacity:.35;
+  border-radius: 50%;
+  animation: float 28s ease-in-out infinite;
+}
+.b1{ left:-10vmax; top:-8vmax; animation-duration: 32s; }
+.b2{ right:-8vmax; top:-10vmax; animation-duration: 26s; }
+.b3{ left:-12vmax; bottom:-12vmax; animation-duration: 30s; }
+.b4{ right:-14vmax; bottom:-10vmax; animation-duration: 34s; }
+.b5{ left:25%; top:20%; width:28vmax; height:28vmax; animation-duration: 24s; }
+.b6{ right:20%; bottom:25%; width:30vmax; height:30vmax; animation-duration: 29s; }
+
+@keyframes float{
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(3vw,-2vh,0) scale(1.05); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+
+/* ---------- Glass panel ---------- */
+.panel{
+  position: relative;
+  max-width: 980px;
+  width: min(92vw, 980px);
+  margin: 8vh auto;
+  padding: 24px clamp(18px, 3vw, 28px);
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--glass-bd);
+  box-shadow: var(--glass-shadow);
+}
+
+.panel__header{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; margin-bottom:16px;
+}
+
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand__icon{ width:40px; height:40px; border-radius:12px; }
+.brand__title{ font-size: clamp(18px, 2.2vw, 22px); margin:0; font-weight:700; letter-spacing:.2px; }
+.brand__subtitle{ margin:0; color:var(--muted); font-size: 13px; }
+.panel__link{ font-size:13px; opacity:.7; }
+.panel__link:hover{ opacity:1; }
+
+/* ---------- Cards ---------- */
+.card{
+  position: relative;
+  margin-top: 16px;
+  padding: clamp(16px, 2.5vw, 22px);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklab, var(--glass-bd) 70%, transparent);
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--glass-bg) 88%, transparent) 0%,
+    color-mix(in oklab, var(--glass-bg) 65%, transparent) 100%);
+  box-shadow: 0 8px 28px rgba(0,0,0,.15) inset;
+}
+
+.card__title{
+  margin:0 0 8px 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--muted);
+}
+
+/* ---------- Form ---------- */
+.grid{
+  display:grid;
+  gap: 14px;
+  grid-template-columns: repeat(12, 1fr);
+}
+.grid .field:nth-child(1){ grid-column: span 6; }
+.grid .field:nth-child(2){ grid-column: span 6; }
+.grid .field:nth-child(3){ grid-column: span 6; }
+.grid .field.switch{ grid-column: span 6; display:flex; align-items:center; gap:12px; }
+
+.field{ margin: 10px 0; }
+.field--inline{ max-width: 320px; }
+
+.label{
+  display:block; margin:0 0 6px 2px;
+  font-size: 12px; color: var(--muted); letter-spacing:.04em;
+}
+
+.input{
+  width:100%;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--fg);
+  background: color-mix(in oklab, var(--glass-bg) 80%, transparent);
+  border: 1px solid color-mix(in oklab, var(--glass-bd) 70%, transparent);
+  border-radius: 14px;
+  outline: none;
+  transition: border .18s ease, background .18s ease, transform .08s ease;
+  backdrop-filter: blur(12px) saturate(140%);
+}
+.input:hover{
+  border-color: color-mix(in oklab, var(--brand) 45%, var(--glass-bd));
+}
+.input:focus{
+  border-color: color-mix(in oklab, var(--brand) 65%, var(--glass-bd));
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--brand) 22%, transparent);
+  transform: translateY(-1px);
+}
+
+.hint{
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Fancy iOS-like switch */
+.switch{
+  position: relative;
+}
+.switch__input{
+  appearance: none; width: 48px; height: 28px;
+  border-radius: 999px; margin-left: auto;
+  background: color-mix(in oklab, var(--glass-bg) 60%, transparent);
+  border: 1px solid color-mix(in oklab, var(--glass-bd) 70%, transparent);
+  position: relative; outline: none; cursor: pointer;
+  transition: background .2s ease, border .2s ease;
+}
+.switch__input::after{
+  content:""; position:absolute; top:3px; left:3px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(180deg, #fff, #eaeaea);
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  transition: transform .22s cubic-bezier(.2,.8,.25,1);
+}
+.switch__input:checked{
+  background: linear-gradient(120deg, color-mix(in oklab, var(--brand) 60%, transparent), color-mix(in oklab, var(--brand-2) 60%, transparent));
+  border-color: color-mix(in oklab, var(--brand) 40%, var(--glass-bd));
+}
+.switch__input:checked::after{
+  transform: translateX(20px);
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  -webkit-tap-highlight-color: transparent;
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:10px; min-height:42px; padding: 0 16px;
+  font-weight: 600; letter-spacing:.015em;
+  color: var(--fg);
+  border-radius: 16px; border: 1px solid transparent;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--glass-bg) 90%, transparent), color-mix(in oklab, var(--glass-bg) 60%, transparent));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 16px rgba(0,0,0,.18);
+  cursor:pointer; transition: transform .08s ease, box-shadow .18s ease, border .18s ease;
+}
+.btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 20px rgba(0,0,0,.22); }
+.btn:active{ transform: translateY(0); box-shadow: 0 6px 12px rgba(0,0,0,.18); }
+
+.btn--primary{
+  background: linear-gradient(135deg, color-mix(in oklab, var(--brand) 75%, transparent), color-mix(in oklab, var(--brand-2) 72%, transparent));
+  border-color: color-mix(in oklab, var(--brand) 48%, var(--glass-bd));
+  color: white;
+}
+
+.actions{
+  display:flex; align-items:center; gap:12px;
+  margin: 18px 0 4px 0;
+}
+.status{ font-size:13px; color: var(--muted); }
+
+/* ---------- Popup shared bits (optional nice polish) ---------- */
+.popup header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: 8px;
+}
+.popup h1{ font-size: 16px; margin: 0; }
+.popup .link{ font-size: 12px; opacity:.8; }
+.popup .link:hover{ opacity:1; }
+.popup label{ display:block; font-size:12px; margin:8px 0 4px; color:var(--muted); }
+.popup select, .popup input, .popup textarea{
+  width: 100%; font: inherit; color: var(--fg);
+  padding: 10px 12px; border-radius: 12px; border: 1px solid color-mix(in oklab, var(--glass-bd) 70%, transparent);
+  background: color-mix(in oklab, var(--glass-bg) 80%, transparent);
+  outline:none;
+}
+.popup textarea{ min-height: 80px; resize: vertical; }
+.popup .row{ display:flex; gap:8px; margin-top:10px; }
+.popup button{ composes: btn; } /* not real CSS, but your popup can adopt .btn classes if you want */
+
+/* ===== Select dropdown visibility & bubble highlight ===== */
+
+/* Make the field itself a bit more solid when focused/open */
+select.input{
+  color-scheme: dark;                 /* helps UA pick readable menu colors on dark */
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--glass-bg) 92%, transparent) 0%,
+    color-mix(in oklab, var(--glass-bg) 72%, transparent) 100%);
+}
+
+/* Strong, readable colors for the dropdown Menu (the list of options) */
+select.input option,
+select.input optgroup {
+  background-color: rgba(16, 22, 30, 0.96);  /* nearly solid, fixes “invisible” items */
+  color: var(--fg);
+}
+
+/* Hover/selected “bubble” look inside the menu */
+select.input option:hover,
+select.input option:checked {
+  background-image: radial-gradient(120% 100% at 0% 0%,
+      color-mix(in oklab, var(--brand) 55%, transparent) 0%,
+      color-mix(in oklab, var(--brand-2) 45%, transparent) 45%,
+      transparent 70%);
+  background-color: rgba(16, 22, 30, 0.96); /* keep text readable */
+  color: white;
+}
+
+/* (Optional) slightly stronger focus ring for selects */
+select.input:focus{
+  border-color: color-mix(in oklab, var(--brand) 70%, var(--glass-bd));
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--brand) 28%, transparent);
+}

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intelligent Translator — Options</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="options-body">
+  <div class="bg">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div class="blob b4"></div><div class="blob b5"></div><div class="blob b6"></div>
+    <div class="grain"></div>
+  </div>
+
+  <main class="panel">
+    <header class="panel__header">
+      <div class="brand">
+        <img src="icons/icon48.png" alt="" class="brand__icon" />
+        <div class="brand__meta">
+          <h1 class="brand__title">Intelligent Translator</h1>
+          <p class="brand__subtitle">Options</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2 class="card__title">Provider &amp; Model</h2>
+
+      <div class="field">
+        <label class="label" for="provider">Provider</label>
+        <select id="provider" class="input">
+          <option value="openai">OpenAI (ChatGPT)</option>
+          <option value="openrouter">OpenRouter (multi-provider)</option>
+          <option value="gemini">Google Gemini</option>
+          <option value="mistral">Mistral</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label" for="model">Model (per provider)</label>
+        <select id="model" class="input" title="Model"></select>
+      </div>
+
+      <div class="field">
+        <label class="label" for="apiKey">API Key (per provider)</label>
+        <input id="apiKey" type="password" class="input" placeholder="Key for selected provider" />
+      </div>
+
+      <div class="field field--inline">
+        <label class="label" for="temperature">Creativity (temperature)</label>
+        <input id="temperature" type="number" step="0.1" min="0" max="2" class="input" />
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card__title">Defaults</h2>
+
+      <div class="grid">
+        <div class="field">
+          <label class="label" for="sourceLang">Source Language</label>
+          <select id="sourceLang" class="input">
+            <option value="auto">Auto</option>
+            <option value="en">English</option>
+            <option value="tr">Turkish</option>
+            <option value="de">German</option>
+            <option value="fr">French</option>
+            <option value="es">Spanish</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="targetLang">Target Language</label>
+          <select id="targetLang" class="input">
+            <option value="en">English</option>
+            <option value="tr">Turkish</option>
+            <option value="de">German</option>
+            <option value="fr">French</option>
+            <option value="es">Spanish</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="tone">Tone</label>
+          <select id="tone" class="input">
+            <option value="neutral">Neutral</option>
+            <option value="formal">Formal</option>
+            <option value="casual">Casual</option>
+            <option value="marketing">Marketing</option>
+          </select>
+        </div>
+
+        <div class="field switch">
+          <label class="label" for="brandSafe">Preserve brand/product names</label>
+          <input id="brandSafe" type="checkbox" class="switch__input" />
+          <span class="switch__slider" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="glossary">Glossary (keep-as-is, comma-separated)</label>
+        <input id="glossary" class="input" placeholder="Apple, iPhone, ChatGPT, YouTube..." />
+      </div>
+    </section>
+
+    <footer class="actions">
+      <button id="save" class="btn btn--primary">Save</button>
+      <span id="status" class="status"></span>
+    </footer>
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>
