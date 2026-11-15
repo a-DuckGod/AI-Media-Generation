@@ -22,3 +22,15 @@ def test_invalid_imagen_model_returns_error(monkeypatch):
     assert response.status_code == 400
     assert response.get_json() == {"error": "Invalid model ID provided."}
 
+
+def test_serves_frontend_and_logo():
+    client = create_client()
+
+    index_resp = client.get("/")
+    assert index_resp.status_code == 200
+    assert b"AI Media Generator" in index_resp.data
+
+    logo_resp = client.get("/logo.png")
+    assert logo_resp.status_code == 200
+    assert logo_resp.content_type == "image/png"
+

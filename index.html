@@ -96,12 +96,11 @@
         const googleKeyInput = document.getElementById('google_key');
 
         function getBackendUrl() {
-            if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+            if (window.location.protocol === 'file:' ||
+                ((window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") && window.location.port === "5500")) {
                 return 'http://127.0.0.1:5000/generate';
-            } else {
-                // IMPORTANT: Make sure this URL is correct for your DEPLOYED backend
-                return 'https://ai-media-generator-yrca.onrender.com/generate';
             }
+            return '/generate';
         }
 
         async function generateContent() {

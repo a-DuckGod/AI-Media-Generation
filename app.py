@@ -1,13 +1,23 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS 
 from openai import OpenAI
 import os
 import requests 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # --- FLASK APP ---
 app = Flask(__name__)
 # This allows your live frontend to talk to your live backend
 CORS(app, origins=["http://127.0.0.1:5500", "null", "https://ai-media-generation.onrender.com", "https://ai-media-generator-w67t.onrender.com", "https://ai-media-generator-fv1a.onrender.com"])
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(BASE_DIR, 'index.html')
+
+@app.route('/logo.png')
+def serve_logo():
+    return send_from_directory(BASE_DIR, 'logo.png')
 
 @app.route('/generate', methods=['POST'])
 def generate_content():
