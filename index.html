@@ -8,96 +8,186 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="icon" type="image/png" href="logo.png">
-    
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image:
+                radial-gradient(circle at 20% 0%, rgba(168, 85, 247, 0.14), transparent 45%),
+                radial-gradient(circle at 80% 10%, rgba(236, 72, 153, 0.12), transparent 45%);
+        }
         select {
-            -webkit-appearance: none; -moz-appearance: none; appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.5em 1.5em; padding-right: 3rem; 
+            background-position: right 0.9rem center;
+            background-size: 1.25em 1.25em;
+            padding-right: 2.75rem;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center px-4 py-10">
 
-    <div class="w-full max-w-2xl mx-auto space-y-8">
-        <div class="text-center">
-            
-            <img src="logo.png" alt="AI Media Generator Logo" class="mx-auto h-24 w-auto mb-4">
-            
-            <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+    <main class="w-full max-w-3xl mx-auto space-y-8">
+        <header class="text-center space-y-3">
+            <img src="logo.png" alt="AI Media Generator Logo" class="mx-auto h-20 w-auto drop-shadow-lg">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-500">
                 AI Media Generator
             </h1>
-            <p class="mt-4 text-lg text-gray-400">
-                Bring your ideas to life. Enter your API keys, describe a scene, and create.
+            <p class="text-base md:text-lg text-slate-400 max-w-xl mx-auto">
+                Bring your ideas to life with OpenAI DALL·E and Google Imagen. Your API keys stay in your browser.
             </p>
-        </div>
+        </header>
 
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-lg space-y-6">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="openai_key" class="block text-sm font-medium text-gray-300 mb-2">OpenAI API Key</label>
-                    <input type="password" id="openai_key" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 text-white" placeholder="Paste your OpenAI key">
+        <section class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 md:p-7 shadow-2xl space-y-6">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">API Keys (BYOK)</h2>
+                    <div class="flex items-center gap-4 text-xs text-slate-400">
+                        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox" id="rememberKeys" class="rounded border-slate-700 bg-slate-800 text-purple-500 focus:ring-purple-500">
+                            <span>Remember in browser</span>
+                        </label>
+                        <button type="button" id="clearKeysBtn" class="text-slate-400 hover:text-pink-400 transition-colors">
+                            Clear
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <label for="google_key" class="block text-sm font-medium text-gray-300 mb-2">Google AI API Key</label>
-                    <input type="password" id="google_key" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 text-white" placeholder="Paste your Google key">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="openai_key" class="block text-sm font-medium text-slate-300 mb-1.5">OpenAI API Key</label>
+                        <div class="relative">
+                            <input type="password" id="openai_key" autocomplete="off"
+                                class="w-full pl-3.5 pr-10 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/70 focus:border-pink-500 text-sm text-white placeholder-slate-500"
+                                placeholder="sk-...">
+                            <button type="button" data-toggle-target="openai_key" aria-label="Toggle OpenAI key visibility"
+                                class="toggle-key-btn absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 text-xs">
+                                Show
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="google_key" class="block text-sm font-medium text-slate-300 mb-1.5">Google AI API Key</label>
+                        <div class="relative">
+                            <input type="password" id="google_key" autocomplete="off"
+                                class="w-full pl-3.5 pr-10 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/70 focus:border-purple-500 text-sm text-white placeholder-slate-500"
+                                placeholder="AIza...">
+                            <button type="button" data-toggle-target="google_key" aria-label="Toggle Google key visibility"
+                                class="toggle-key-btn absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 text-xs">
+                                Show
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <hr class="border-gray-700">
+            <hr class="border-slate-800">
 
             <div>
-                <label for="apiSelector" class="block text-lg font-semibold text-gray-200 mb-2">Choose AI Model & Quality:</label>
-                <select id="apiSelector" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 transition duration-200 text-white">
+                <label for="apiSelector" class="block text-sm font-semibold text-slate-200 mb-2">Model &amp; Quality</label>
+                <select id="apiSelector" class="w-full p-3 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/70 focus:border-purple-500 transition text-sm md:text-base text-white">
                     <optgroup label="OpenAI Models">
                         <option value="dalle-3-hd">DALL·E 3 (HD) — $0.08 / image</option>
                         <option value="dalle-3-std" selected>DALL·E 3 (Standard) — $0.04 / image</option>
                         <option value="dalle-2-1024">DALL·E 2 (1024px) — $0.02 / image</option>
                         <option value="dalle-2-512">DALL·E 2 (512px) — $0.018 / image</option>
-                        <option value="sora" disabled>Sora (Video) — N/A (Not Public)</option>
+                        <option value="sora" disabled>Sora (Video) — Coming Soon</option>
                     </optgroup>
                     <optgroup label="Google Models">
                         <option value="imagen-4-ultra">Imagen 4 (Ultra) — $0.06 / image</option>
                         <option value="imagen-4-std">Imagen 4 (Standard) — $0.04 / image</option>
                         <option value="imagen-3">Imagen 3 — $0.03 / image</option>
-                        <option value="veo" disabled>Veo (Video) — N/A (Not Public)</option>
+                        <option value="veo" disabled>Veo (Video) — Coming Soon</option>
                     </optgroup>
                 </select>
             </div>
-            
-            <div>
-                 <label for="prompt" class="block text-lg font-semibold text-gray-200 mb-2">Your Prompt:</label>
-                <textarea id="prompt" rows="4" class="w-full p-4 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 transition duration-200 text-white placeholder-gray-400 resize-none" placeholder="A photorealistic close-up of a chameleon..."></textarea>
-            </div>
-           
-            <button id="generateBtn" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 ease-in-out flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M12 2a10 10 0 1 1-6.32 17.68"/><path d="M12 2a10 10 0 0 0-6.32 17.68"/><path d="M12 12v-2"/><path d="m16 16-2-2"/><path d="M8 16l2-2"/><path d="m12 16 1.5-1.5"/><path d="M12 2v2.5"/><path d="m4.32 7.68-.82-.82.82.82"/><path d="m19.68 7.68.82-.82-.82.82"/><path d="m19.68 16.32.82.82-.82-.82"/><path d="m4.32 16.32-.82.82.82-.82"/></svg>
-                Generate
-            </button>
-        </div>
 
-        <div id="result" class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-lg min-h-[320px] flex items-center justify-center">
-            <p class="text-gray-500">Your generated media will appear here.</p>
-        </div>
-    </div>
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label for="prompt" class="block text-sm font-semibold text-slate-200">Prompt</label>
+                    <span class="text-xs text-slate-500">Press Enter to generate · Shift+Enter for new line</span>
+                </div>
+                <textarea id="prompt" rows="4"
+                    class="w-full p-4 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/70 focus:border-purple-500 transition text-white placeholder-slate-500 resize-none"
+                    placeholder="A photorealistic close-up of a chameleon perched on a mossy branch at golden hour..."></textarea>
+            </div>
+
+            <button id="generateBtn"
+                class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3.5 px-5 rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                <span>Generate</span>
+            </button>
+        </section>
+
+        <section id="result" class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-2xl min-h-[320px] flex flex-col items-center justify-center gap-4">
+            <p class="text-slate-500 text-sm">Your generated media will appear here.</p>
+        </section>
+    </main>
 
     <script>
+        const STORAGE_KEYS = {
+            remember: 'ai_media_remember_keys',
+            openai: 'ai_media_openai_key',
+            google: 'ai_media_google_key'
+        };
+
         const generateBtn = document.getElementById('generateBtn');
         const promptInput = document.getElementById('prompt');
         const resultDiv = document.getElementById('result');
         const apiSelector = document.getElementById('apiSelector');
         const openaiKeyInput = document.getElementById('openai_key');
         const googleKeyInput = document.getElementById('google_key');
+        const rememberKeysCheckbox = document.getElementById('rememberKeys');
+        const clearKeysBtn = document.getElementById('clearKeysBtn');
+
+        function loadSavedKeys() {
+            const remember = localStorage.getItem(STORAGE_KEYS.remember) === 'true';
+            rememberKeysCheckbox.checked = remember;
+            if (remember) {
+                openaiKeyInput.value = localStorage.getItem(STORAGE_KEYS.openai) || '';
+                googleKeyInput.value = localStorage.getItem(STORAGE_KEYS.google) || '';
+            }
+        }
+
+        function syncSavedKeys() {
+            if (rememberKeysCheckbox.checked) {
+                localStorage.setItem(STORAGE_KEYS.remember, 'true');
+                localStorage.setItem(STORAGE_KEYS.openai, openaiKeyInput.value.trim());
+                localStorage.setItem(STORAGE_KEYS.google, googleKeyInput.value.trim());
+            } else {
+                localStorage.removeItem(STORAGE_KEYS.remember);
+                localStorage.removeItem(STORAGE_KEYS.openai);
+                localStorage.removeItem(STORAGE_KEYS.google);
+            }
+        }
+
+        rememberKeysCheckbox.addEventListener('change', syncSavedKeys);
+        openaiKeyInput.addEventListener('input', syncSavedKeys);
+        googleKeyInput.addEventListener('input', syncSavedKeys);
+
+        clearKeysBtn.addEventListener('click', () => {
+            openaiKeyInput.value = '';
+            googleKeyInput.value = '';
+            rememberKeysCheckbox.checked = false;
+            syncSavedKeys();
+        });
+
+        document.querySelectorAll('.toggle-key-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.toggleTarget);
+                const isPassword = target.type === 'password';
+                target.type = isPassword ? 'text' : 'password';
+                btn.textContent = isPassword ? 'Hide' : 'Show';
+            });
+        });
 
         function getBackendUrl() {
             if (window.location.protocol === 'file:' ||
-                ((window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") && window.location.port === "5500")) {
+                ((window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') && window.location.port === '5500')) {
                 return 'http://127.0.0.1:5000/generate';
             }
             return '/generate';
@@ -124,15 +214,13 @@
 
             generateBtn.disabled = true;
             displayMessage('loading', 'Generating media...');
-            
-            const url = getBackendUrl();
 
             try {
-                const response = await fetch(url, {
+                const response = await fetch(getBackendUrl(), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: prompt, 
+                    body: JSON.stringify({
+                        prompt,
                         model: selectedModel,
                         openai_key: openaiKey,
                         google_key: googleKey
@@ -140,50 +228,82 @@
                 });
 
                 const data = await response.json();
-
                 if (!response.ok) {
                     throw new Error(data.error || `Server error: ${response.status}`);
                 }
-                
-                const mediaUrls = data.media_urls || [];
 
+                const mediaUrls = data.media_urls || [];
                 if (mediaUrls.length === 0) {
                     throw new Error('API did not return any media.');
                 }
-                
+
                 resultDiv.innerHTML = '';
-                mediaUrls.forEach(src => {
+                mediaUrls.forEach((src, index) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'w-full flex flex-col items-center gap-3';
+
                     let mediaElement;
                     if (selectedModel.includes('sora') || selectedModel.includes('veo')) {
                         mediaElement = document.createElement('video');
-                        mediaElement.src = src; mediaElement.controls = true; mediaElement.autoplay = true; mediaElement.loop = true; mediaElement.muted = true;
-                        mediaElement.className = 'rounded-lg max-w-full h-auto shadow-inner';
+                        mediaElement.src = src;
+                        mediaElement.controls = true;
+                        mediaElement.autoplay = true;
+                        mediaElement.loop = true;
+                        mediaElement.muted = true;
+                        mediaElement.className = 'rounded-xl max-w-full h-auto shadow-lg';
                     } else {
                         mediaElement = document.createElement('img');
-                        mediaElement.src = src; mediaElement.alt = prompt;
-                        mediaElement.className = 'rounded-lg max-w-full h-auto shadow-inner';
+                        mediaElement.src = src;
+                        mediaElement.alt = prompt;
+                        mediaElement.className = 'rounded-xl max-w-full h-auto shadow-lg border border-slate-800';
                     }
-                    resultDiv.appendChild(mediaElement);
-                });
+                    wrapper.appendChild(mediaElement);
 
+                    if (!selectedModel.includes('sora') && !selectedModel.includes('veo')) {
+                        const actions = document.createElement('div');
+                        actions.className = 'flex items-center gap-3';
+
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = src;
+                        downloadLink.target = '_blank';
+                        downloadLink.rel = 'noopener noreferrer';
+                        downloadLink.download = `ai-media-${Date.now()}-${index + 1}.png`;
+                        downloadLink.textContent = 'Download / Open Image';
+                        downloadLink.className = 'text-xs font-medium px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition';
+                        actions.appendChild(downloadLink);
+
+                        wrapper.appendChild(actions);
+                    }
+
+                    resultDiv.appendChild(wrapper);
+                });
             } catch (error) {
-                console.error("Fetch Error:", error);
-                displayMessage('error', `Error: ${error.message}`);
+                console.error('Fetch Error:', error);
+                displayMessage('error', error.message);
             } finally {
                 generateBtn.disabled = false;
             }
         }
 
         function displayMessage(type, text) {
-            let messageHtml = '';
+            resultDiv.innerHTML = '';
             if (type === 'loading') {
-                messageHtml = `<div class="flex flex-col items-center justify-center text-gray-400"><div class="w-10 h-10 border-4 border-dashed rounded-full animate-spin border-purple-400"></div><p class="mt-4 text-lg">${text}</p></div>`;
+                resultDiv.innerHTML = `
+                    <div class="flex flex-col items-center justify-center text-slate-400">
+                        <div class="w-10 h-10 border-4 border-dashed rounded-full animate-spin border-purple-400"></div>
+                        <p class="mt-4 text-sm font-medium">${text}</p>
+                    </div>`;
             } else if (type === 'error') {
-                messageHtml = `<p class="text-red-400 font-semibold">${text}</p>`;
+                const p = document.createElement('p');
+                p.className = 'text-red-400 font-medium text-sm text-center max-w-md';
+                p.textContent = `Error: ${text}`;
+                resultDiv.appendChild(p);
             } else {
-                 messageHtml = `<p class="text-gray-500">${text}</p>`;
+                const p = document.createElement('p');
+                p.className = 'text-slate-500 text-sm';
+                p.textContent = text;
+                resultDiv.appendChild(p);
             }
-            resultDiv.innerHTML = messageHtml;
         }
 
         generateBtn.addEventListener('click', generateContent);
@@ -193,6 +313,8 @@
                 generateContent();
             }
         });
+
+        loadSavedKeys();
     </script>
 </body>
 </html>

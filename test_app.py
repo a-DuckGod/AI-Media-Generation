@@ -34,3 +34,33 @@ def test_serves_frontend_and_logo():
     assert logo_resp.status_code == 200
     assert logo_resp.content_type == "image/png"
 
+
+def test_health_check():
+    client = create_client()
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.get_json() == {"status": "ok"}
+
+
+def test_missing_prompt_or_model_returns_400():
+    client = create_client()
+
+    resp = client.post("/generate", json={"prompt": "   ", "model": "dalle-3-std"})
+    assert resp.status_code == 400
+    assert resp.get_json() == {"error": "Prompt and model ID are required."}
+
+    non_json = client.post("/generate", data="not json", content_type="text/plain")
+    assert non_json.status_code == 400
+    assert non_json.get_json() == {"error": "Prompt and model ID are required."}
+
+
+def test_missing_api_key_returns_400():
+    client = create_client()
+
+    openai_resp = client.post("/generate", json={"prompt": "a cat", "model": "dalle-3-std"})
+    assert openai_resp.status_code == 400
+    assert openai_resp.get_json() == {"error": "OpenAI API Key is required for this model."}
+
+    google_resp = client.post("/generate", json={"prompt": "a cat", "model": "imagen-3"})
+    assert google_resp.status_code == 400
+    assert google_resp.get_json() == {"error": "Google API Key is required for this model."}
