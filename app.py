@@ -7,10 +7,24 @@ import requests
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-IMAGEN_MODEL_MAP = {
-    "imagen-4-ultra": "imagen-4.0-ultra-generate-preview-06-06",
-    "imagen-4-std": "imagen-4.0-generate-preview-06-06",
-    "imagen-3": "imagen-3.0-generate-002",
+OPENAI_MODELS = {
+    "gpt-image-1.5-high": {"model": "gpt-image-1.5", "quality": "high", "size": "1024x1024"},
+    "gpt-image-1.5-med": {"model": "gpt-image-1.5", "quality": "medium", "size": "1024x1024"},
+    "gpt-image-1-high": {"model": "gpt-image-1", "quality": "high", "size": "1024x1024"},
+    "gpt-image-1-med": {"model": "gpt-image-1", "quality": "medium", "size": "1024x1024"},
+    "gpt-image-1-mini": {"model": "gpt-image-1-mini", "quality": "medium", "size": "1024x1024"},
+    "dalle-3-hd": {"model": "dall-e-3", "quality": "hd", "size": "1024x1024"},
+    "dalle-3-std": {"model": "dall-e-3", "quality": "standard", "size": "1024x1024"},
+    "dalle-2-1024": {"model": "dall-e-2", "size": "1024x1024"},
+    "dalle-2-512": {"model": "dall-e-2", "size": "512x512"},
+}
+
+GEMINI_IMAGE_MODELS = {
+    "gemini-nano-banana-2.1": "gemini-nano-banana-2.1",
+    "gemini-3-pro-image": "gemini-3-pro-image",
+    "gemini-3.1-flash-image": "gemini-3.1-flash-image",
+    "gemini-3.1-flash-lite-image": "gemini-3.1-flash-lite-image",
+    "gemini-2.5-flash-image": "gemini-2.5-flash-image",
 }
 
 app = Flask(__name__)
@@ -57,48 +71,34 @@ def generate_content():
     try:
         media_urls = []
 
-        if model_id.startswith("dalle"):
+        if model_id in OPENAI_MODELS:
             if not user_openai_key:
                 return jsonify({"error": "OpenAI API Key is required for this model."}), 400
 
             client = OpenAI(api_key=user_openai_key)
-            params = {
-                "model": "dall-e-3",
-                "prompt": prompt,
-                "n": 1,
-                "size": "1024x1024",
-            }
-
-            if model_id == "dalle-3-hd":
-                params["quality"] = "hd"
-            elif model_id == "dalle-3-std":
-                params["quality"] = "standard"
-            elif model_id == "dalle-2-1024":
-                params["model"] = "dall-e-2"
-            elif model_id == "dalle-2-512":
-                params["model"] = "dall-e-2"
-                params["size"] = "512x512"
-            else:
-                return jsonify({"error": "Invalid model ID provided."}), 400
+            params = {"prompt": prompt, "n": 1, **OPENAI_MODELS[model_id]}
 
             response = client.images.generate(**params)
-            media_urls.append(response.data[0].url)
+            item = response.data[0]
+            if getattr(item, "b64_json", None):
+                media_urls.append(f"data:image/png;base64,{item.b64_json}")
+            elif getattr(item, "url", None):
+                media_urls.append(item.url)
+            else:
+                return jsonify({"error": "OpenAI API did not return an image."}), 502
 
-        elif model_id.startswith("imagen"):
+        elif model_id in GEMINI_IMAGE_MODELS:
             if not user_google_key:
                 return jsonify({"error": "Google API Key is required for this model."}), 400
 
-            model_name = IMAGEN_MODEL_MAP.get(model_id)
-            if not model_name:
-                return jsonify({"error": "Invalid model ID provided."}), 400
-
+            model_name = GEMINI_IMAGE_MODELS[model_id]
             api_url = (
-                f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:predict"
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
                 f"?key={user_google_key}"
             )
             payload = {
-                "instances": [{"prompt": prompt}],
-                "parameters": {"sampleCount": 1},
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"responseModalities": ["IMAGE"]},
             }
 
             api_response = requests.post(api_url, json=payload, timeout=60)
@@ -114,17 +114,19 @@ def generate_content():
                 )
 
             result = api_response.json()
-            predictions = result.get("predictions") or []
-            if not predictions or "bytesBase64Encoded" not in predictions[0]:
-                return jsonify({"error": "Google API did not return a prediction."}), 502
+            for candidate in result.get("candidates") or []:
+                parts = (candidate.get("content") or {}).get("parts") or []
+                for part in parts:
+                    inline = part.get("inlineData")
+                    if inline and inline.get("data"):
+                        mime_type = inline.get("mimeType") or "image/png"
+                        media_urls.append(f"data:{mime_type};base64,{inline['data']}")
+                        break
+                if media_urls:
+                    break
 
-            base64_image = predictions[0]["bytesBase64Encoded"]
-            media_urls.append(f"data:image/png;base64,{base64_image}")
-
-        elif model_id in ["sora", "veo"]:
-            media_urls.append(
-                "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            )
+            if not media_urls:
+                return jsonify({"error": "Google API did not return an image."}), 502
 
         else:
             return jsonify({"error": "Invalid model ID provided."}), 400

@@ -1,14 +1,15 @@
 # AI Media Generator
 
-A lightweight, Bring-Your-Own-Key (BYOK) web application for generating AI images using **OpenAI DALL·E** and **Google Imagen** models. A single Flask service hosts both the web interface and the `/generate` API.
+A lightweight, Bring-Your-Own-Key (BYOK) web application for generating AI images using **OpenAI** and **Google Gemini** models. A single Flask service hosts both the web interface and the `/generate` API.
 
 ## Features
 
 - **Unified Single-Service Architecture**: Flask serves the frontend (`index.html`, `logo.png`) and backend API (`/generate`, `/health`) from one deployment.
-- **Bring Your Own Key (BYOK)**: Users enter their own OpenAI and/or Google AI API keys in the browser (with optional `localStorage` persistence). No server-side API keys are stored.
+- **Bring Your Own Key (BYOK)**: Users enter their own OpenAI and/or Google AI (Gemini) API keys in the browser (with optional `localStorage` persistence). No server-side API keys are stored.
 - **Supported Models**:
-  - **OpenAI**: DALL·E 3 (HD & Standard), DALL·E 2 (1024px & 512px)
-  - **Google**: Imagen 4 (Ultra & Standard), Imagen 3
+  - **OpenAI GPT Image**: `gpt-image-1.5` (High & Medium), `gpt-image-1` (High & Medium), `gpt-image-1-mini`
+  - **OpenAI Legacy DALL·E**: `dall-e-3` (HD & Standard), `dall-e-2` (1024px & 512px)
+  - **Google Gemini (Nano Banana)**: `gemini-nano-banana-2.1`, `gemini-3-pro-image`, `gemini-3.1-flash-image`, `gemini-3.1-flash-lite-image`, `gemini-2.5-flash-image`
 - **Container & PaaS Ready**: Includes a `Dockerfile` for Google Cloud Run and a `Procfile` for Render / Buildpacks.
 
 ## Project Structure
@@ -16,7 +17,7 @@ A lightweight, Bring-Your-Own-Key (BYOK) web application for generating AI image
 ```text
 .
 ├── app.py              # Flask application (UI routes, /health, /generate)
-├── index.html          # Single-page Tailwind CSS frontend
+├── index.html          # Single-page Tailwind CSS studio frontend
 ├── logo.png            # Site logo & favicon
 ├── test_app.py         # Pytest unit tests
 ├── requirements.txt    # Python dependencies
