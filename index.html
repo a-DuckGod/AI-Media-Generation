@@ -14,8 +14,9 @@
         body {
             font-family: 'Inter', sans-serif;
             background-image:
-                radial-gradient(circle at 20% 0%, rgba(168, 85, 247, 0.14), transparent 45%),
-                radial-gradient(circle at 80% 10%, rgba(236, 72, 153, 0.12), transparent 45%);
+                radial-gradient(circle at 15% 0%, rgba(168, 85, 247, 0.16), transparent 40%),
+                radial-gradient(circle at 85% 10%, rgba(6, 182, 212, 0.12), transparent 40%),
+                radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.10), transparent 45%);
         }
         select {
             -webkit-appearance: none;
@@ -24,109 +25,147 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 0.9rem center;
-            background-size: 1.25em 1.25em;
+            background-size: 1.2em 1.2em;
             padding-right: 2.75rem;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center px-4 py-10">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 
-    <main class="w-full max-w-3xl mx-auto space-y-8">
-        <header class="text-center space-y-3">
-            <img src="logo.png" alt="AI Media Generator Logo" class="mx-auto h-20 w-auto drop-shadow-lg">
-            <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-500">
-                AI Media Generator
-            </h1>
-            <p class="text-base md:text-lg text-slate-400 max-w-xl mx-auto">
-                Bring your ideas to life with OpenAI DALL·E and Google Imagen. Your API keys stay in your browser.
-            </p>
+    <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 flex-1 flex flex-col gap-8">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/80 pb-6">
+            <div class="flex items-center gap-4">
+                <img src="logo.png" alt="AI Media Generator Logo" class="h-14 w-14 rounded-2xl shadow-lg shadow-purple-500/20 border border-slate-800 object-cover">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500">
+                        AI Media Generator
+                    </h1>
+                    <p class="text-sm text-slate-400">
+                        BYOK studio powered by OpenAI GPT Image / DALL·E &amp; Google Gemini Nano Banana
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-medium">
+                <span class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300">OpenAI</span>
+                <span class="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300">Google Gemini</span>
+            </div>
         </header>
 
-        <section class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 md:p-7 shadow-2xl space-y-6">
-            <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">API Keys (BYOK)</h2>
-                    <div class="flex items-center gap-4 text-xs text-slate-400">
-                        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                            <input type="checkbox" id="rememberKeys" class="rounded border-slate-700 bg-slate-800 text-purple-500 focus:ring-purple-500">
-                            <span>Remember in browser</span>
-                        </label>
-                        <button type="button" id="clearKeysBtn" class="text-slate-400 hover:text-pink-400 transition-colors">
-                            Clear
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="openai_key" class="block text-sm font-medium text-slate-300 mb-1.5">OpenAI API Key</label>
-                        <div class="relative">
-                            <input type="password" id="openai_key" autocomplete="off"
-                                class="w-full pl-3.5 pr-10 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/70 focus:border-pink-500 text-sm text-white placeholder-slate-500"
-                                placeholder="sk-...">
-                            <button type="button" data-toggle-target="openai_key" aria-label="Toggle OpenAI key visibility"
-                                class="toggle-key-btn absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 text-xs">
-                                Show
+        <!-- Studio Grid -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+            <!-- Left Controls -->
+            <section class="lg:col-span-5 bg-slate-900/75 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-6 shadow-2xl space-y-5">
+                <!-- API Keys -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">API Keys (Stored Locally Only)</h2>
+                        <div class="flex items-center gap-3 text-xs text-slate-400">
+                            <label class="inline-flex items-center gap-1.5 cursor-pointer select-none hover:text-slate-200 transition">
+                                <input type="checkbox" id="rememberKeys" class="rounded border-slate-700 bg-slate-800 text-purple-500 focus:ring-purple-500">
+                                <span>Remember</span>
+                            </label>
+                            <button type="button" id="clearKeysBtn" class="text-slate-400 hover:text-pink-400 transition">
+                                Clear
                             </button>
                         </div>
                     </div>
-                    <div>
-                        <label for="google_key" class="block text-sm font-medium text-slate-300 mb-1.5">Google AI API Key</label>
-                        <div class="relative">
-                            <input type="password" id="google_key" autocomplete="off"
-                                class="w-full pl-3.5 pr-10 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/70 focus:border-purple-500 text-sm text-white placeholder-slate-500"
-                                placeholder="AIza...">
-                            <button type="button" data-toggle-target="google_key" aria-label="Toggle Google key visibility"
-                                class="toggle-key-btn absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 text-xs">
-                                Show
-                            </button>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label for="openai_key" class="block text-xs font-medium text-slate-300 mb-1">OpenAI API Key</label>
+                            <div class="relative">
+                                <input type="password" id="openai_key" autocomplete="off"
+                                    class="w-full pl-3.5 pr-14 py-2.5 bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/60 focus:border-pink-500 text-sm text-white placeholder-slate-600"
+                                    placeholder="sk-...">
+                                <button type="button" data-toggle-target="openai_key" aria-label="Toggle OpenAI key visibility"
+                                    class="toggle-key-btn absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 text-xs font-medium">
+                                    Show
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="google_key" class="block text-xs font-medium text-slate-300 mb-1">Google AI (Gemini) API Key</label>
+                            <div class="relative">
+                                <input type="password" id="google_key" autocomplete="off"
+                                    class="w-full pl-3.5 pr-14 py-2.5 bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500 text-sm text-white placeholder-slate-600"
+                                    placeholder="AIza...">
+                                <button type="button" data-toggle-target="google_key" aria-label="Toggle Google key visibility"
+                                    class="toggle-key-btn absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 text-xs font-medium">
+                                    Show
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <hr class="border-slate-800">
+                <hr class="border-slate-800/80">
 
-            <div>
-                <label for="apiSelector" class="block text-sm font-semibold text-slate-200 mb-2">Model &amp; Quality</label>
-                <select id="apiSelector" class="w-full p-3 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/70 focus:border-purple-500 transition text-sm md:text-base text-white">
-                    <optgroup label="OpenAI Models">
-                        <option value="dalle-3-hd">DALL·E 3 (HD) — $0.08 / image</option>
-                        <option value="dalle-3-std" selected>DALL·E 3 (Standard) — $0.04 / image</option>
-                        <option value="dalle-2-1024">DALL·E 2 (1024px) — $0.02 / image</option>
-                        <option value="dalle-2-512">DALL·E 2 (512px) — $0.018 / image</option>
-                        <option value="sora" disabled>Sora (Video) — Coming Soon</option>
-                    </optgroup>
-                    <optgroup label="Google Models">
-                        <option value="imagen-4-ultra">Imagen 4 (Ultra) — $0.06 / image</option>
-                        <option value="imagen-4-std">Imagen 4 (Standard) — $0.04 / image</option>
-                        <option value="imagen-3">Imagen 3 — $0.03 / image</option>
-                        <option value="veo" disabled>Veo (Video) — Coming Soon</option>
-                    </optgroup>
-                </select>
-            </div>
-
-            <div>
-                <div class="flex items-center justify-between mb-2">
-                    <label for="prompt" class="block text-sm font-semibold text-slate-200">Prompt</label>
-                    <span class="text-xs text-slate-500">Press Enter to generate · Shift+Enter for new line</span>
+                <!-- Model Selector -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="apiSelector" class="block text-sm font-semibold text-slate-200">Model</label>
+                        <span id="providerBadge" class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-pink-500/15 text-pink-300 border border-pink-500/20">
+                            Requires OpenAI Key
+                        </span>
+                    </div>
+                    <select id="apiSelector" class="w-full p-3 bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/60 focus:border-purple-500 transition text-sm text-white">
+                        <optgroup label="OpenAI — GPT Image">
+                            <option value="gpt-image-1.5-high">GPT Image 1.5 (High Quality)</option>
+                            <option value="gpt-image-1.5-med" selected>GPT Image 1.5 (Medium Quality)</option>
+                            <option value="gpt-image-1-high">GPT Image 1 (High Quality)</option>
+                            <option value="gpt-image-1-med">GPT Image 1 (Medium Quality)</option>
+                            <option value="gpt-image-1-mini">GPT Image 1 Mini (Fast &amp; Budget)</option>
+                        </optgroup>
+                        <optgroup label="OpenAI — Legacy DALL·E">
+                            <option value="dalle-3-hd">DALL·E 3 (HD)</option>
+                            <option value="dalle-3-std">DALL·E 3 (Standard)</option>
+                            <option value="dalle-2-1024">DALL·E 2 (1024×1024)</option>
+                            <option value="dalle-2-512">DALL·E 2 (512×512)</option>
+                        </optgroup>
+                        <optgroup label="Google Gemini — Nano Banana">
+                            <option value="gemini-nano-banana-2.1">Nano Banana 2.1 (Recommended)</option>
+                            <option value="gemini-3-pro-image">Nano Banana Pro (Gemini 3 Pro)</option>
+                            <option value="gemini-3.1-flash-image">Nano Banana 2 (Gemini 3.1 Flash)</option>
+                            <option value="gemini-3.1-flash-lite-image">Nano Banana 2 Lite (Ultra Fast)</option>
+                            <option value="gemini-2.5-flash-image">Nano Banana (Gemini 2.5 Flash)</option>
+                        </optgroup>
+                    </select>
                 </div>
-                <textarea id="prompt" rows="4"
-                    class="w-full p-4 bg-slate-800/90 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/70 focus:border-purple-500 transition text-white placeholder-slate-500 resize-none"
-                    placeholder="A photorealistic close-up of a chameleon perched on a mossy branch at golden hour..."></textarea>
-            </div>
 
-            <button id="generateBtn"
-                class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3.5 px-5 rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-                <span>Generate</span>
-            </button>
-        </section>
+                <!-- Prompt -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="prompt" class="block text-sm font-semibold text-slate-200">Prompt</label>
+                        <span id="charCount" class="text-xs text-slate-500">0 chars</span>
+                    </div>
+                    <textarea id="prompt" rows="5"
+                        class="w-full p-3.5 bg-slate-950/70 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/60 focus:border-purple-500 transition text-sm text-white placeholder-slate-600 resize-none"
+                        placeholder="A photorealistic close-up of a chameleon perched on a mossy branch at golden hour, shallow depth of field..."></textarea>
+                    <p class="mt-1.5 text-[11px] text-slate-500">Press <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-300">Enter</kbd> to generate · <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-300">Shift+Enter</kbd> for new line</p>
+                </div>
 
-        <section id="result" class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-2xl min-h-[320px] flex flex-col items-center justify-center gap-4">
-            <p class="text-slate-500 text-sm">Your generated media will appear here.</p>
-        </section>
-    </main>
+                <!-- Generate Button -->
+                <button id="generateBtn"
+                    class="w-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-cyan-400 hover:via-purple-500 hover:to-pink-400 text-white font-semibold py-3.5 px-5 rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/35 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    <span>Generate Image</span>
+                </button>
+            </section>
+
+            <!-- Right Preview Canvas -->
+            <section id="result" class="lg:col-span-7 bg-slate-900/75 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-6 shadow-2xl min-h-[460px] flex flex-col items-center justify-center gap-4">
+                <div class="text-center space-y-2 max-w-xs">
+                    <div class="mx-auto h-12 w-12 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    </div>
+                    <p class="text-slate-300 text-sm font-medium">Canvas Ready</p>
+                    <p class="text-slate-500 text-xs">Enter your API key, choose a model, and describe what you want to create.</p>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script>
         const STORAGE_KEYS = {
@@ -137,12 +176,28 @@
 
         const generateBtn = document.getElementById('generateBtn');
         const promptInput = document.getElementById('prompt');
+        const charCount = document.getElementById('charCount');
         const resultDiv = document.getElementById('result');
         const apiSelector = document.getElementById('apiSelector');
+        const providerBadge = document.getElementById('providerBadge');
         const openaiKeyInput = document.getElementById('openai_key');
         const googleKeyInput = document.getElementById('google_key');
         const rememberKeysCheckbox = document.getElementById('rememberKeys');
         const clearKeysBtn = document.getElementById('clearKeysBtn');
+
+        function isGoogleModel(modelId) {
+            return modelId.startsWith('gemini');
+        }
+
+        function updateProviderBadge() {
+            if (isGoogleModel(apiSelector.value)) {
+                providerBadge.textContent = 'Requires Google AI Key';
+                providerBadge.className = 'text-[11px] font-medium px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/20';
+            } else {
+                providerBadge.textContent = 'Requires OpenAI Key';
+                providerBadge.className = 'text-[11px] font-medium px-2 py-0.5 rounded-full bg-pink-500/15 text-pink-300 border border-pink-500/20';
+            }
+        }
 
         function loadSavedKeys() {
             const remember = localStorage.getItem(STORAGE_KEYS.remember) === 'true';
@@ -168,6 +223,11 @@
         rememberKeysCheckbox.addEventListener('change', syncSavedKeys);
         openaiKeyInput.addEventListener('input', syncSavedKeys);
         googleKeyInput.addEventListener('input', syncSavedKeys);
+        apiSelector.addEventListener('change', updateProviderBadge);
+
+        promptInput.addEventListener('input', () => {
+            charCount.textContent = `${promptInput.value.length} chars`;
+        });
 
         clearKeysBtn.addEventListener('click', () => {
             openaiKeyInput.value = '';
@@ -203,17 +263,17 @@
                 displayMessage('error', 'Please enter a prompt.');
                 return;
             }
-            if (selectedModel.startsWith('dalle') && !openaiKey) {
+            if (!isGoogleModel(selectedModel) && !openaiKey) {
                 displayMessage('error', 'Please enter your OpenAI API Key.');
                 return;
             }
-            if (selectedModel.startsWith('imagen') && !googleKey) {
+            if (isGoogleModel(selectedModel) && !googleKey) {
                 displayMessage('error', 'Please enter your Google AI API Key.');
                 return;
             }
 
             generateBtn.disabled = true;
-            displayMessage('loading', 'Generating media...');
+            displayMessage('loading', 'Generating your image...');
 
             try {
                 const response = await fetch(getBackendUrl(), {
@@ -234,47 +294,33 @@
 
                 const mediaUrls = data.media_urls || [];
                 if (mediaUrls.length === 0) {
-                    throw new Error('API did not return any media.');
+                    throw new Error('API did not return an image.');
                 }
 
                 resultDiv.innerHTML = '';
                 mediaUrls.forEach((src, index) => {
                     const wrapper = document.createElement('div');
-                    wrapper.className = 'w-full flex flex-col items-center gap-3';
+                    wrapper.className = 'w-full flex flex-col items-center gap-4';
 
-                    let mediaElement;
-                    if (selectedModel.includes('sora') || selectedModel.includes('veo')) {
-                        mediaElement = document.createElement('video');
-                        mediaElement.src = src;
-                        mediaElement.controls = true;
-                        mediaElement.autoplay = true;
-                        mediaElement.loop = true;
-                        mediaElement.muted = true;
-                        mediaElement.className = 'rounded-xl max-w-full h-auto shadow-lg';
-                    } else {
-                        mediaElement = document.createElement('img');
-                        mediaElement.src = src;
-                        mediaElement.alt = prompt;
-                        mediaElement.className = 'rounded-xl max-w-full h-auto shadow-lg border border-slate-800';
-                    }
-                    wrapper.appendChild(mediaElement);
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = prompt;
+                    img.className = 'rounded-xl max-w-full max-h-[540px] object-contain shadow-xl border border-slate-800';
+                    wrapper.appendChild(img);
 
-                    if (!selectedModel.includes('sora') && !selectedModel.includes('veo')) {
-                        const actions = document.createElement('div');
-                        actions.className = 'flex items-center gap-3';
+                    const actions = document.createElement('div');
+                    actions.className = 'flex items-center gap-3';
 
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = src;
-                        downloadLink.target = '_blank';
-                        downloadLink.rel = 'noopener noreferrer';
-                        downloadLink.download = `ai-media-${Date.now()}-${index + 1}.png`;
-                        downloadLink.textContent = 'Download / Open Image';
-                        downloadLink.className = 'text-xs font-medium px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition';
-                        actions.appendChild(downloadLink);
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = src;
+                    downloadLink.target = '_blank';
+                    downloadLink.rel = 'noopener noreferrer';
+                    downloadLink.download = `ai-media-${Date.now()}-${index + 1}.png`;
+                    downloadLink.textContent = 'Download / Open Image';
+                    downloadLink.className = 'text-xs font-medium px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 transition';
+                    actions.appendChild(downloadLink);
 
-                        wrapper.appendChild(actions);
-                    }
-
+                    wrapper.appendChild(actions);
                     resultDiv.appendChild(wrapper);
                 });
             } catch (error) {
@@ -294,15 +340,10 @@
                         <p class="mt-4 text-sm font-medium">${text}</p>
                     </div>`;
             } else if (type === 'error') {
-                const p = document.createElement('p');
-                p.className = 'text-red-400 font-medium text-sm text-center max-w-md';
-                p.textContent = `Error: ${text}`;
-                resultDiv.appendChild(p);
-            } else {
-                const p = document.createElement('p');
-                p.className = 'text-slate-500 text-sm';
-                p.textContent = text;
-                resultDiv.appendChild(p);
+                const box = document.createElement('div');
+                box.className = 'px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm text-center max-w-md';
+                box.textContent = `Error: ${text}`;
+                resultDiv.appendChild(box);
             }
         }
 
@@ -315,6 +356,7 @@
         });
 
         loadSavedKeys();
+        updateProviderBadge();
     </script>
 </body>
 </html>
