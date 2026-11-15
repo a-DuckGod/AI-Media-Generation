@@ -132,6 +132,10 @@
                             <option value="gemini-2.5-flash-image">Nano Banana (Gemini 2.5 Flash)</option>
                         </optgroup>
                     </select>
+                    <div class="mt-2 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs">
+                        <span id="modelMeta" class="text-slate-400">1024×1024 · Medium quality</span>
+                        <span id="modelPrice" class="font-semibold text-emerald-400">~$0.034 / image</span>
+                    </div>
                 </div>
 
                 <!-- Prompt -->
@@ -180,23 +184,47 @@
         const resultDiv = document.getElementById('result');
         const apiSelector = document.getElementById('apiSelector');
         const providerBadge = document.getElementById('providerBadge');
+        const modelMeta = document.getElementById('modelMeta');
+        const modelPrice = document.getElementById('modelPrice');
         const openaiKeyInput = document.getElementById('openai_key');
         const googleKeyInput = document.getElementById('google_key');
         const rememberKeysCheckbox = document.getElementById('rememberKeys');
         const clearKeysBtn = document.getElementById('clearKeysBtn');
 
+        const MODEL_INFO = {
+            'gpt-image-1.5-high': { meta: '1024×1024 · High quality', price: '~$0.13 / image' },
+            'gpt-image-1.5-med': { meta: '1024×1024 · Medium quality', price: '~$0.034 / image' },
+            'gpt-image-1-high': { meta: '1024×1024 · High quality', price: '~$0.17 / image' },
+            'gpt-image-1-med': { meta: '1024×1024 · Medium quality', price: '~$0.042 / image' },
+            'gpt-image-1-mini': { meta: '1024×1024 · Fast & budget', price: '~$0.015 / image' },
+            'dalle-3-hd': { meta: '1024×1024 · HD quality', price: '$0.08 / image' },
+            'dalle-3-std': { meta: '1024×1024 · Standard', price: '$0.04 / image' },
+            'dalle-2-1024': { meta: '1024×1024 · Legacy', price: '$0.02 / image' },
+            'dalle-2-512': { meta: '512×512 · Legacy', price: '$0.018 / image' },
+            'gemini-nano-banana-2.1': { meta: '1K · High-efficiency', price: '~$0.034 / image' },
+            'gemini-3-pro-image': { meta: '1K · Studio reasoning', price: '~$0.134 / image' },
+            'gemini-3.1-flash-image': { meta: '1K · Fast generation', price: '~$0.067 / image' },
+            'gemini-3.1-flash-lite-image': { meta: '1K · Ultra fast & low cost', price: '~$0.034 / image' },
+            'gemini-2.5-flash-image': { meta: '1K · Legacy 2.5 Flash', price: '~$0.039 / image' }
+        };
+
         function isGoogleModel(modelId) {
             return modelId.startsWith('gemini');
         }
 
-        function updateProviderBadge() {
-            if (isGoogleModel(apiSelector.value)) {
+        function updateModelDetails() {
+            const selected = apiSelector.value;
+            if (isGoogleModel(selected)) {
                 providerBadge.textContent = 'Requires Google AI Key';
                 providerBadge.className = 'text-[11px] font-medium px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/20';
             } else {
                 providerBadge.textContent = 'Requires OpenAI Key';
                 providerBadge.className = 'text-[11px] font-medium px-2 py-0.5 rounded-full bg-pink-500/15 text-pink-300 border border-pink-500/20';
             }
+
+            const info = MODEL_INFO[selected] || { meta: 'Standard', price: 'Varies' };
+            modelMeta.textContent = info.meta;
+            modelPrice.textContent = info.price;
         }
 
         function loadSavedKeys() {
@@ -223,7 +251,7 @@
         rememberKeysCheckbox.addEventListener('change', syncSavedKeys);
         openaiKeyInput.addEventListener('input', syncSavedKeys);
         googleKeyInput.addEventListener('input', syncSavedKeys);
-        apiSelector.addEventListener('change', updateProviderBadge);
+        apiSelector.addEventListener('change', updateModelDetails);
 
         promptInput.addEventListener('input', () => {
             charCount.textContent = `${promptInput.value.length} chars`;
@@ -356,7 +384,7 @@
         });
 
         loadSavedKeys();
-        updateProviderBadge();
+        updateModelDetails();
     </script>
 </body>
 </html>
